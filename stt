@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# stt — record mic until SIGINT/SIGTERM, transcribe via a local speaches
+# server, print transcript to stdout (exit 0) or an error to stderr (exit 1).
+#
+# Env (optional):
+#   STT_URL       default http://localhost:8000/v1
+#   STT_MODEL     default Systran/faster-whisper-small
+#   STT_LANGUAGE  e.g. "hu"
+#   STT_DEVICE    ffmpeg input device (mac default ":0", linux "default")
+set -uo pipefail
+
+STT_URL="${STT_URL:-http://localhost:8000/v1}"
+STT_MODEL="${STT_MODEL:-Systran/faster-whisper-small}"
+
+case "$(uname)" in
+  Darwin) in_args=(-f avfoundation -i "${STT_DEVICE:-:0}") ;;
+  Linux)  in_args=(-f pulse        -i "${STT_DEVICE:-default}") ;;
+  *) echo "unsupported platform: $(uname)" >&2; exit 1 ;;
+esac
+
+tmp="$(mktemp -t stt.XXXXXX.wav)"
+trap 'rm -f "$tmp"' EXIT
+
+# Record to a temp WAV. ffmpeg runs in the foreground and receives the stop
+# signal directly: a single Ctrl+C (terminal) makes ffmpeg finalize the WAV and
+# exit. The script ignores INT/TERM so it SURVIVES the same Ctrl+C and proceeds
+# to transcribe. For push-to-talk the key-release signals ffmpeg by name
+# (see README) — same clean-stop path.
+trap '' INT TERM                       # script ignores the stop signal
+ffmpeg -loglevel error "${in_args[@]}" -ac 1 -ar 16000 -y "$tmp"
+trap - INT TERM                        # ffmpeg has exited; restore defaults
+
+[ -s "$tmp" ] || { echo "no audio captured" >&2; exit 1; }
+
+args=(-s -m 120 -w $'\n%{http_code}' -X POST "$STT_URL/audio/transcriptions"
+  -H "Authorization: Bearer cant-be-empty"
+  -F "file=@$tmp" -F "model=$STT_MODEL" -F "response_format=text")
+[ -n "${STT_LANGUAGE:-}" ] && args+=(-F "language=$STT_LANGUAGE")
+
+resp="$(curl "${args[@]}")" || { echo "could not reach $STT_URL" >&2; exit 1; }
+code="${resp##*$'\n'}"
+body="${resp%$'\n'*}"
+[ "$code" = 200 ] || { echo "speaches error ($code): $body" >&2; exit 1; }
+
+text="$(printf '%s' "$body" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+[ -n "$text" ] || { echo "empty transcript" >&2; exit 1; }
+printf '%s\n' "$text"

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Print a Whisper language code based on the active Hyprland keyboard layout.
+# Hyprland + jq specific — used by the push-to-talk keybind, NOT by `stt`
+# itself (which stays portable). Adjust the cases for your layouts.
+set -uo pipefail
+
+layout="$(hyprctl devices -j 2>/dev/null \
+  | jq -r '[.keyboards[] | select(.main)][0].active_keymap // empty' 2>/dev/null)"
+
+case "$layout" in
+  Hungarian*) echo hu ;;
+  German*)    echo de ;;
+  English*|US*|UK*|GB*) echo en ;;
+  *)          echo en ;;   # fallback
+esac
