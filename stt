@@ -6,17 +6,14 @@
 #   STT_URL       default http://localhost:8000/v1
 #   STT_MODEL     default Systran/faster-whisper-small
 #   STT_LANGUAGE  e.g. "hu"
-#   STT_DEVICE    ffmpeg input device (mac default ":0", linux "default")
+#   STT_DEVICE    ffmpeg/pulse input device (default "default")
 set -uo pipefail
 
 STT_URL="${STT_URL:-http://localhost:8000/v1}"
 STT_MODEL="${STT_MODEL:-Systran/faster-whisper-small}"
 
-case "$(uname)" in
-  Darwin) in_args=(-f avfoundation -i "${STT_DEVICE:-:0}") ;;
-  Linux)  in_args=(-f pulse        -i "${STT_DEVICE:-default}") ;;
-  *) echo "unsupported platform: $(uname)" >&2; exit 1 ;;
-esac
+# Linux only (PulseAudio/PipeWire). STT_DEVICE overrides the input source.
+in_args=(-f pulse -i "${STT_DEVICE:-default}")
 
 tmp="$(mktemp -t stt.XXXXXX.wav)"
 trap 'rm -f "$tmp"' EXIT
