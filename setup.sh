@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
 # Setup for stt push-to-talk — run it straight from the web:
-#   curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.1.1/setup.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.2.0/setup.sh | bash
 #
 # Downloads the scripts, starts the speaches server, downloads the model, and
 # adds the Hyprland keybinding. Re-running is safe. Undo with:
-#   curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.1.1/setup.sh | bash -s -- --uninstall
+#   curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.2.0/setup.sh | bash -s -- --uninstall
 #
 set -euo pipefail
 
 REPO="${STT_REPO:-SubZtep/stt}"
-REF="${STT_REF:-v0.1.1}"
+REF="${STT_REF:-v0.2.0}"
 BASE="https://raw.githubusercontent.com/$REPO/$REF"
 CONFIG_FILE="$HOME/.config/stt.json"
 
@@ -57,13 +57,49 @@ have jq || { echo "ERROR: jq is required." >&2; exit 1; }
 
 # ---------------------------------------------------------------- config
 
+xkb_to_lang() {
+  case "$1" in
+    gb|us|au|ca|nz) echo "en" ;;
+    cz) echo "cs" ;; dk) echo "da" ;; gr) echo "el" ;;
+    jp) echo "ja" ;; kr) echo "ko" ;; cn|tw) echo "zh" ;;
+    *) echo "$1" ;;
+  esac
+}
+
 if [ ! -f "$CONFIG_FILE" ]; then
   mkdir -p "$(dirname "$CONFIG_FILE")"
-  if [ -f "$(dirname "$0")/config/default.json" ]; then
-    cp "$(dirname "$0")/config/default.json" "$CONFIG_FILE"
+
+  local_default="$(dirname "$0")/config/default.json"
+  if [ -f "$local_default" ]; then
+    default_json="$(cat "$local_default")"
   else
-    curl -fsSL "$BASE/config/default.json" -o "$CONFIG_FILE"
+    default_json="$(curl -fsSL "$BASE/config/default.json")"
   fi
+
+  if have hyprctl; then
+    layout_str="$(hyprctl devices -j 2>/dev/null |
+      jq -r '[.keyboards[].layout] | first // empty' 2>/dev/null)"
+  fi
+
+  if [ -n "${layout_str:-}" ]; then
+    echo "Detected keyboard layouts: $layout_str"
+    models_json="{}"
+    IFS=',' read -ra xkb_codes <<< "$layout_str"
+    for xkb in "${xkb_codes[@]}"; do
+      lang="$(xkb_to_lang "$xkb")"
+      model_val="$(echo "$default_json" | jq -r --arg l "$lang" '.models[$l] // empty')"
+      if [ -n "$model_val" ]; then
+        models_json="$(echo "$models_json" | jq --arg l "$lang" --arg m "$model_val" '.[$l] = $m')"
+        echo "  $xkb -> $lang -> $model_val"
+      else
+        echo "  $xkb -> $lang (no specific model, will use default)"
+      fi
+    done
+    echo "$default_json" | jq --argjson m "$models_json" '.models = $m' > "$CONFIG_FILE"
+  else
+    echo "$default_json" > "$CONFIG_FILE"
+  fi
+
   echo "Created config: $CONFIG_FILE"
 fi
 
@@ -83,7 +119,7 @@ MARK_END="$(cfg '.hypr.mark[1]')"; MARK_END="${MARK_END:-# <<< stt <<<}"
 if [ "${1:-}" = "--uninstall" ]; then
   echo "Uninstalling stt…"
 
-  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang"
+  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang" "$BIN_DIR/stt-check"
   echo "  removed scripts"
 
   if [ -f "$CONFIG_FILE" ]; then
@@ -115,7 +151,7 @@ fi
 
 echo "Downloading scripts -> $BIN_DIR"
 mkdir -p "$BIN_DIR"
-for f in stt stt-layout-lang; do
+for f in stt stt-layout-lang stt-check; do
   curl -fsSL "$BASE/$f" -o "$BIN_DIR/$f"
   chmod +x "$BIN_DIR/$f"
   echo "  $f"
