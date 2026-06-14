@@ -98,7 +98,7 @@ MARK_END="$(cfg '.hypr.mark[1]')"; MARK_END="${MARK_END:-# <<< stt <<<}"
 if [ "${1:-}" = "--uninstall" ]; then
   echo "Uninstalling stt…"
 
-  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang" "$BIN_DIR/stt-check"
+  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang" "$BIN_DIR/stt-check" "$BIN_DIR/stt-download"
   echo "  removed scripts"
 
   rm -rf "$HOME/.local/share/stt"
@@ -137,7 +137,7 @@ fi
 
 echo "Downloading scripts -> $BIN_DIR"
 mkdir -p "$BIN_DIR"
-for f in stt stt-layout-lang stt-check; do
+for f in stt stt-layout-lang stt-check stt-download; do
   curl -fsSL "$BASE/$f" -o "$BIN_DIR/$f"
   chmod +x "$BIN_DIR/$f"
   echo "  $f"
@@ -163,15 +163,6 @@ echo "Sound: $SOUND_FILE"
 
 url="$(cfg '.url')"; url="${url:-http://localhost:8000/v1}"
 
-download_model() {
-  local m="$1"
-  echo "Downloading model '$m'…"
-  for _ in $(seq 1 30); do
-    curl -fsS -X POST "$url/models/$m" >/dev/null 2>&1 && break
-    sleep 1
-  done
-}
-
 if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER"; then
   echo "Server: container '$CONTAINER' already exists — leaving it."
 else
@@ -185,7 +176,13 @@ else
     ghcr.io/speaches-ai/speaches:0.9.0-rc.3-cpu >/dev/null
 fi
 
-download_model "$(jq -r '.multi.model' "$ALIASES_FILE")"
+echo "Downloading default model (multi)…"
+# wait for server to be ready then download via stt-download
+for _ in $(seq 1 30); do
+  curl -fsS "$url/models" >/dev/null 2>&1 && break
+  sleep 1
+done
+STT_ALIASES="$ALIASES_FILE" STT_CONFIG="$CONFIG_FILE" "$BIN_DIR/stt-download" multi
 
 # ---------------------------------------------------------------- keybinding
 

@@ -102,6 +102,11 @@ _parse_response() {
   fi
 }
 
+# ---- build VAD params from config if present ----
+_vad_json="$(_cfg '.vad // empty')"
+_vad_args=()
+[ -n "$_vad_json" ] && _vad_args=(-F "vad_parameters=$_vad_json")
+
 # ---- stream audio live to Speaches; tee saves for 404 fallback ----
 _parse_response < <(
   { ffmpeg -loglevel error "${in_args[@]}" -ac 1 -ar 16000 -f wav - 2>/dev/null || true; } \
@@ -112,6 +117,7 @@ _parse_response < <(
         -F "file=@-;filename=audio.wav;type=audio/wav" \
         -F "model=$STT_MODEL" -F "response_format=text" \
         ${STT_LANGUAGE:+-F "language=$STT_LANGUAGE"} \
+        "${_vad_args[@]}" \
         2>/dev/null
   printf '%d' "$?" > "$_rc_file"
 )
@@ -134,6 +140,7 @@ if [ "$_http_status" = "404" ] && [ "$STT_MODEL" != "multi" ]; then
       -F "file=@$tmp;filename=audio.wav;type=audio/wav" \
       -F "model=multi" -F "response_format=text" \
       ${STT_LANGUAGE:+-F "language=$STT_LANGUAGE"} \
+      "${_vad_args[@]}" \
       2>/dev/null
     printf '%d' "$?" > "$_rc_file"
   )

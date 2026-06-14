@@ -40,6 +40,27 @@
       "default": "speaches",
       "description": "Speaches server container name"
     },
+    "vad": {
+      "type": "object",
+      "description": "Voice Activity Detection parameters passed to Speaches",
+      "properties": {
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Speech probability threshold (0.0–1.0, default 0.5). Higher = less sensitive, filters more noise."
+        },
+        "min_speech_duration_ms": {
+          "type": "integer",
+          "description": "Minimum duration of speech chunks in ms (default 250)."
+        },
+        "min_silence_duration_ms": {
+          "type": "integer",
+          "description": "Minimum silence gap between speech chunks in ms (default 2000)."
+        }
+      },
+      "additionalProperties": false
+    },
     "hypr": {
       "type": "object",
       "properties": {
