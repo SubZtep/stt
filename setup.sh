@@ -10,7 +10,7 @@
 set -euo pipefail
 
 REPO="${STT_REPO:-SubZtep/stt}"
-REF="${STT_REF:-v0.10.0}"
+REF="${STT_REF:-v0.10.1}"
 BASE="https://raw.githubusercontent.com/$REPO/$REF"
 CONFIG_FILE="$HOME/.config/stt/config.json"
 
