@@ -27,11 +27,15 @@ Re-running is safe. Linux/Hyprland only.
 ## How it works
 
 ```
-[hold key]  → ffmpeg records AND streams WAV live to Speaches
-[release]   → recording stops → Speaches transcribes → result copied to clipboard
+[hold key]  → detect layout → "stt · Magyar / Hallgatom…" notification
+             → ffmpeg streams WAV live to Speaches during recording
+[release]   → recording stops → "Írás…" → Speaches transcribes
+             → result copied to clipboard + typed via notification
 ```
 
 Audio is piped directly to Speaches while you speak, so by the time you release the key the server has already received everything and just needs to run inference.
+
+Pressing the key while a transcription is already in progress cancels it and starts a fresh recording — no stuck processes.
 
 If the model for your current language isn't downloaded yet, `multi` (the multilingual fallback) handles that request while the correct model downloads in the background — seamless next time.
 
@@ -41,9 +45,24 @@ If the model for your current language isn't downloaded yet, `multi` (the multil
 
 ### Model aliases
 
-Language-to-model mapping lives in [`config/model_aliases.json`](./config/model_aliases.json) and is served directly to the Speaches server. Each key is an ISO 639-1 language code (or `multi` for the multilingual fallback); the value is a Hugging Face model ID.
+Language-to-model mapping lives in [`config/model_aliases.json`](./config/model_aliases.json). Each key is an ISO 639-1 language code (or `multi` for the multilingual fallback):
 
-The active keyboard layout (detected via `hyprctl`) automatically picks the matching alias — no extra config needed. Language models are downloaded **on first use**, so only the models you actually speak are ever fetched. Re-run setup after editing `model_aliases.json` to push the updated aliases to `~/.config/stt/aliases.json`.
+```json
+{
+  "hu": {
+    "model": "SubZtep/whisper-large-v3-hu-ct2-int8",
+    "name": "Magyar",
+    "listening": "Hallgatom…",
+    "typing": "Írás…"
+  }
+}
+```
+
+The active keyboard layout (detected via `hyprctl`) automatically picks the matching alias — no extra config needed. Language models are downloaded **on first use**, so only the models you actually speak are ever fetched.
+
+Notifications use the `name`, `listening`, and `typing` strings from the alias, so the UI speaks your language. `setup.sh` transforms this into the flat format Speaches expects and keeps the rich version in `~/.config/stt/aliases.json` for the client scripts to read.
+
+Re-run setup after editing `model_aliases.json` to apply changes.
 
 ### Environment overrides
 
