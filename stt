@@ -14,6 +14,10 @@ _cfg() {
   [ -f "$_CFG" ] && jq -r "$1 // empty" "$_CFG" 2>/dev/null || true
 }
 
+_notif_id="$(cat /tmp/stt.notif_id 2>/dev/null || echo 0)"
+_notify() { notify-send --replace-id="$_notif_id" "stt" "$1"; }
+_die() { echo "$1" >&2; _notify "Error: $1"; exit 1; }
+
 _default_url="$(_cfg '.url')"
 _default_url="${_default_url:-http://localhost:8000/v1}"
 _default_model="$(_cfg '.model')"
@@ -42,30 +46,21 @@ trap '' INT TERM # script ignores the stop signal
 ffmpeg -loglevel error "${in_args[@]}" -ac 1 -ar 16000 -y "$tmp"
 trap - INT TERM # ffmpeg has exited; restore defaults
 
-[ -s "$tmp" ] || {
-  echo "no audio captured" >&2
-  exit 1
-}
+[ -s "$tmp" ] || _die "no audio captured"
 
 args=(-s -m 120 -w $'\n%{http_code}' -X POST "$STT_URL/audio/transcriptions"
   -H "Authorization: Bearer cant-be-empty"
   -F "file=@$tmp" -F "model=$STT_MODEL" -F "response_format=text")
 [ -n "${STT_LANGUAGE:-}" ] && args+=(-F "language=$STT_LANGUAGE")
 
-resp="$(curl "${args[@]}")" || {
-  echo "could not reach $STT_URL" >&2
-  exit 1
-}
+resp="$(curl "${args[@]}")" || _die "could not reach $STT_URL"
 code="${resp##*$'\n'}"
 body="${resp%$'\n'*}"
-[ "$code" = 200 ] || {
-  echo "speaches error ($code): $body" >&2
-  exit 1
-}
+[ "$code" = 200 ] || _die "speaches error ($code): $body"
 
 text="$(printf '%s' "$body" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-[ -n "$text" ] || {
-  echo "empty transcript" >&2
-  exit 1
-}
+[ -n "$text" ] || _die "empty transcript"
+
 printf '%s\n' "$text"
+wl-copy -- "$text"
+_notify "$text"

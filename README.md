@@ -9,7 +9,7 @@ A small bash script pipes your mic to a local [Speaches](https://speaches.ai) (W
 Run from a terminal:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.2.0/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.3.0/setup.sh | bash
 ```
 
 Automatic installation steps:
@@ -39,7 +39,7 @@ The active keyboard layout (detected via `hyprctl`) automatically picks the matc
 ## Uninstall
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.2.0/setup.sh | bash -s -- --uninstall
+curl -fsSL https://raw.githubusercontent.com/SubZtep/stt/v0.3.0/setup.sh | bash -s -- --uninstall
 ```
 
 Removes the scripts, the config, the keybinding, the server, and the downloaded models.

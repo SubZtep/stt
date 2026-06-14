@@ -183,8 +183,8 @@ if have hyprctl; then
     cp "$HYPR_CONF" "$HYPR_CONF.bak" 2>/dev/null || true
     {
       echo "$MARK_START"
-      echo "bind  = $KEY, exec, out=\$(STT_LANGUAGE=\$(stt-layout-lang) stt 2>/tmp/stt.err) && wl-copy -- \"\$out\" && notify-send \"stt\" \"\$out\" || notify-send \"stt error\" \"\$(cat /tmp/stt.err)\""
-      echo "bindr = $KEY, exec, pkill -INT ffmpeg"
+      echo "bind  = $KEY, exec, notify-send --print-id -t 0 \"stt\" \"Listening...\" > /tmp/stt.notif_id && STT_LANGUAGE=\$(stt-layout-lang) stt"
+      echo "bindr = $KEY, exec, pkill -INT ffmpeg; notify-send --replace-id=\$(cat /tmp/stt.notif_id 2>/dev/null || echo 0) -t 0 \"stt\" \"Typing...\""
       echo "$MARK_END"
     } >>"$HYPR_CONF"
     hyprctl reload >/dev/null 2>&1 || true
