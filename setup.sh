@@ -179,6 +179,7 @@ else
   fi
   docker run -d \
     --name "$CONTAINER" \
+    --restart unless-stopped \
     -p 8000:8000 \
     -e ENABLE_UI=False \
     "${_docker_extra_args[@]}" \
