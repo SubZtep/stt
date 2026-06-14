@@ -14,9 +14,8 @@ RECORDING_FILE="/tmp/stt.recording"
 if [ -f "$RECORDING_FILE" ] && [ -f "$PID_FILE" ]; then
   stt_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
   if [ -n "$stt_pid" ] && kill -0 "$stt_pid" 2>/dev/null; then
-    # Recording is active — stop it by sending INT to ffmpeg.
-    # The running stt process will then finish transcribing.
-    pkill -INT -x ffmpeg
+    # Recording is active — stop it by sending INT to the exact ffmpeg PID.
+    kill -INT "$(cat /tmp/stt.ffmpeg.pid 2>/dev/null)" 2>/dev/null || true
     exit 0
   fi
 fi
