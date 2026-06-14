@@ -41,7 +41,7 @@ STT_MODEL="${STT_MODEL:-$_default_model}"
 # ---- i18n strings from aliases ----
 _lang_name="$(_alias ".\"$STT_MODEL\".name // \"$STT_MODEL\"")"
 _msg_listening="$(_alias ".\"$STT_MODEL\".listening // \"Listening…\"")"
-_msg_typing="$(_alias ".\"$STT_MODEL\".typing // \"Typing…\"")"
+_msg_transcribing="$(_alias ".\"$STT_MODEL\".transcribing // \"Transcribing…\"")"
 
 # ---- notifications ----
 _notif_id_file="/tmp/stt.notif_id"
@@ -124,7 +124,7 @@ _parse_response < <(
   printf '%d' "$?" > "$_rc_file"
 )
 
-_notify "$_msg_typing"
+_notify "$_msg_transcribing"
 trap - INT TERM
 
 _curl_rc="$(cat "$_rc_file" 2>/dev/null || echo 1)"

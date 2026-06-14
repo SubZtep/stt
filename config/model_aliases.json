@@ -3,54 +3,509 @@
     "model": "Systran/faster-whisper-small",
     "name": "Multilingual",
     "listening": "Listening…",
-    "typing": "Typing…"
+    "transcribing": "Transcribing…"
+  },
+  "af": {
+    "name": "Afrikaans",
+    "listening": "Luister…",
+    "transcribing": "Transkribeer…"
+  },
+  "am": {
+    "name": "አማርኛ",
+    "listening": "እያዳመጥኩ ነው…",
+    "transcribing": "እየተረጎምኩ ነው…"
+  },
+  "ar": {
+    "name": "العربية",
+    "listening": "أستمع…",
+    "transcribing": "جارٍ النسخ…"
+  },
+  "as": {
+    "name": "অসমীয়া",
+    "listening": "শুনি আছো…",
+    "transcribing": "প্ৰতিলিপি কৰি আছো…"
+  },
+  "az": {
+    "name": "Azərbaycanca",
+    "listening": "Dinləyirəm…",
+    "transcribing": "Transkripsiya edilir…"
+  },
+  "ba": {
+    "name": "Башҡортса",
+    "listening": "Тыңлайым…",
+    "transcribing": "Транскрипциялау…"
+  },
+  "be": {
+    "name": "Беларуская",
+    "listening": "Слухаю…",
+    "transcribing": "Транскрыбуецца…"
+  },
+  "bg": {
+    "name": "Български",
+    "listening": "Слушам…",
+    "transcribing": "Транскрибиране…"
+  },
+  "bn": {
+    "name": "বাংলা",
+    "listening": "শুনছি…",
+    "transcribing": "প্রতিলিপি হচ্ছে…"
+  },
+  "bo": {
+    "name": "བོད་སྐད།",
+    "listening": "ཉན་གྱིན་ཡོད…",
+    "transcribing": "འབྲི་གྱིན་ཡོད…"
+  },
+  "br": {
+    "name": "Brezhoneg",
+    "listening": "O selaou…",
+    "transcribing": "O treuzskrivañ…"
+  },
+  "bs": {
+    "name": "Bosanski",
+    "listening": "Slušam…",
+    "transcribing": "Transkripcija…"
+  },
+  "ca": {
+    "name": "Català",
+    "listening": "Escoltant…",
+    "transcribing": "Transcrivint…"
+  },
+  "cs": {
+    "name": "Čeština",
+    "listening": "Poslouchám…",
+    "transcribing": "Přepisuji…"
+  },
+  "cy": {
+    "name": "Cymraeg",
+    "listening": "Gwrando…",
+    "transcribing": "Trawsgrifio…"
+  },
+  "da": {
+    "name": "Dansk",
+    "listening": "Lytter…",
+    "transcribing": "Transskriberer…"
   },
   "de": {
     "model": "bofenghuang/whisper-large-v2-cv11-german-ct2",
     "name": "Deutsch",
     "listening": "Ich höre zu…",
-    "typing": "Schreibe…"
+    "transcribing": "Transkribiere…"
+  },
+  "el": {
+    "name": "Ελληνικά",
+    "listening": "Ακούω…",
+    "transcribing": "Μεταγραφή…"
   },
   "en": {
     "model": "Systran/faster-whisper-medium.en",
     "name": "English",
     "listening": "Listening…",
-    "typing": "Typing…"
+    "transcribing": "Transcribing…"
+  },
+  "es": {
+    "name": "Español",
+    "listening": "Escuchando…",
+    "transcribing": "Transcribiendo…"
+  },
+  "et": {
+    "name": "Eesti",
+    "listening": "Kuulan…",
+    "transcribing": "Transkribeerin…"
+  },
+  "eu": {
+    "name": "Euskara",
+    "listening": "Entzuten…",
+    "transcribing": "Transkribatzen…"
+  },
+  "fa": {
+    "name": "فارسی",
+    "listening": "در حال گوش دادن…",
+    "transcribing": "در حال رونویسی…"
+  },
+  "fi": {
+    "name": "Suomi",
+    "listening": "Kuuntelen…",
+    "transcribing": "Litteroin…"
+  },
+  "fo": {
+    "name": "Føroyskt",
+    "listening": "Hoyri…",
+    "transcribing": "Umskrivi…"
   },
   "fr": {
     "model": "bofenghuang/whisper-large-v2-cv11-french-ct2",
     "name": "Français",
     "listening": "J'écoute…",
-    "typing": "Écriture…"
+    "transcribing": "Transcription…"
+  },
+  "gl": {
+    "name": "Galego",
+    "listening": "Escoitando…",
+    "transcribing": "Transcribindo…"
+  },
+  "gu": {
+    "name": "ગુજરાતી",
+    "listening": "સાંભળું છું…",
+    "transcribing": "લિપ્યંતરણ…"
+  },
+  "ha": {
+    "name": "Hausa",
+    "listening": "Sauraro…",
+    "transcribing": "Rubuta…"
+  },
+  "haw": {
+    "name": "ʻŌlelo Hawaiʻi",
+    "listening": "Ke hoʻolohe nei…",
+    "transcribing": "Ke kākau nei…"
+  },
+  "he": {
+    "name": "עברית",
+    "listening": "מקשיב…",
+    "transcribing": "מתמלל…"
+  },
+  "hi": {
+    "name": "हिन्दी",
+    "listening": "सुन रहा हूँ…",
+    "transcribing": "लिख रहा हूँ…"
+  },
+  "hr": {
+    "name": "Hrvatski",
+    "listening": "Slušam…",
+    "transcribing": "Transkripcija…"
+  },
+  "ht": {
+    "name": "Kreyòl ayisyen",
+    "listening": "Ap koute…",
+    "transcribing": "Ap transkripsyon…"
   },
   "hu": {
     "model": "SubZtep/whisper-large-v3-hu-ct2-int8",
     "name": "Magyar",
     "listening": "Hallgatom…",
-    "typing": "Írás…"
+    "transcribing": "Átírás…"
+  },
+  "hy": {
+    "name": "Հայերեն",
+    "listening": "Լսում եմ…",
+    "transcribing": "Արտագրում եմ…"
+  },
+  "id": {
+    "name": "Bahasa Indonesia",
+    "listening": "Mendengarkan…",
+    "transcribing": "Mentranskrip…"
+  },
+  "is": {
+    "name": "Íslenska",
+    "listening": "Hlusta…",
+    "transcribing": "Afrita…"
   },
   "it": {
     "model": "LocalAI-io/whisper-base-it-ct2-int8",
     "name": "Italiano",
     "listening": "Ascolto…",
-    "typing": "Scrittura…"
+    "transcribing": "Trascrizione…"
   },
   "ja": {
     "model": "arc-r/faster-whisper-large-v2-mix-jp",
     "name": "日本語",
     "listening": "聞いています…",
-    "typing": "入力中…"
+    "transcribing": "文字起こし中…"
+  },
+  "jw": {
+    "name": "Basa Jawa",
+    "listening": "Ngrungokake…",
+    "transcribing": "Transkripsi…"
+  },
+  "ka": {
+    "name": "ქართული",
+    "listening": "ვუსმენ…",
+    "transcribing": "ვტრანსკრიბირებ…"
+  },
+  "kk": {
+    "name": "Қазақша",
+    "listening": "Тыңдап тұрмын…",
+    "transcribing": "Транскрипциялау…"
+  },
+  "km": {
+    "name": "ភាសាខ្មែរ",
+    "listening": "កំពុងស្តាប់…",
+    "transcribing": "កំពុងចម្លង…"
+  },
+  "kn": {
+    "name": "ಕನ್ನಡ",
+    "listening": "ಕೇಳುತ್ತಿದ್ದೇನೆ…",
+    "transcribing": "ಲಿಪ್ಯಂತರ…"
+  },
+  "ko": {
+    "name": "한국어",
+    "listening": "듣고 있습니다…",
+    "transcribing": "받아쓰기 중…"
+  },
+  "la": {
+    "name": "Latina",
+    "listening": "Auscultans…",
+    "transcribing": "Transcribens…"
+  },
+  "lb": {
+    "name": "Lëtzebuergesch",
+    "listening": "Lauschteren…",
+    "transcribing": "Transkribéieren…"
+  },
+  "ln": {
+    "name": "Lingála",
+    "listening": "Nkokí koyoka…",
+    "transcribing": "Nkokí kokomela…"
+  },
+  "lo": {
+    "name": "ລາວ",
+    "listening": "ກຳລັງຟັງ…",
+    "transcribing": "ກຳລັງຖອດຄຳ…"
+  },
+  "lt": {
+    "name": "Lietuvių",
+    "listening": "Klausau…",
+    "transcribing": "Transkribuoju…"
+  },
+  "lv": {
+    "name": "Latviešu",
+    "listening": "Klausos…",
+    "transcribing": "Transkribēju…"
+  },
+  "mg": {
+    "name": "Malagasy",
+    "listening": "Mihaino…",
+    "transcribing": "Manoratra…"
+  },
+  "mi": {
+    "name": "Māori",
+    "listening": "E whakarongo ana…",
+    "transcribing": "E tuhituhi ana…"
+  },
+  "mk": {
+    "name": "Македонски",
+    "listening": "Слушам…",
+    "transcribing": "Транскрибирам…"
+  },
+  "ml": {
+    "name": "മലയാളം",
+    "listening": "കേൾക്കുന്നു…",
+    "transcribing": "ലിപ്യന്തരണം…"
+  },
+  "mn": {
+    "name": "Монгол",
+    "listening": "Сонсож байна…",
+    "transcribing": "Транскрипц хийж байна…"
+  },
+  "mr": {
+    "name": "मराठी",
+    "listening": "ऐकत आहे…",
+    "transcribing": "लिप्यंतरण…"
+  },
+  "ms": {
+    "name": "Bahasa Melayu",
+    "listening": "Mendengar…",
+    "transcribing": "Menyalin…"
+  },
+  "mt": {
+    "name": "Malti",
+    "listening": "Nisma'…",
+    "transcribing": "Nittraskrivi…"
+  },
+  "my": {
+    "name": "မြန်မာဘာသာ",
+    "listening": "နားထောင်နေသည်…",
+    "transcribing": "ဖတ်ရှုနေသည်…"
+  },
+  "ne": {
+    "name": "नेपाली",
+    "listening": "सुन्दैछु…",
+    "transcribing": "लिप्यान्तरण…"
+  },
+  "nl": {
+    "name": "Nederlands",
+    "listening": "Luisteren…",
+    "transcribing": "Transcriberen…"
+  },
+  "nn": {
+    "name": "Nynorsk",
+    "listening": "Lyttar…",
+    "transcribing": "Transkriberer…"
+  },
+  "no": {
+    "name": "Norsk",
+    "listening": "Lytter…",
+    "transcribing": "Transkriberer…"
+  },
+  "oc": {
+    "name": "Occitan",
+    "listening": "Escotant…",
+    "transcribing": "Transcrivènt…"
+  },
+  "pa": {
+    "name": "ਪੰਜਾਬੀ",
+    "listening": "ਸੁਣ ਰਿਹਾ ਹਾਂ…",
+    "transcribing": "ਲਿਪੀਅੰਤਰਨ…"
   },
   "pl": {
     "model": "mmalyska/distil-whisper-large-v3-pl-ct2",
     "name": "Polski",
     "listening": "Słucham…",
-    "typing": "Piszę…"
+    "transcribing": "Transkrybuję…"
+  },
+  "ps": {
+    "name": "پښتو",
+    "listening": "اورم…",
+    "transcribing": "لیکل کیږي…"
+  },
+  "pt": {
+    "name": "Português",
+    "listening": "Ouvindo…",
+    "transcribing": "Transcrevendo…"
+  },
+  "ro": {
+    "name": "Română",
+    "listening": "Ascult…",
+    "transcribing": "Transcriere…"
+  },
+  "ru": {
+    "name": "Русский",
+    "listening": "Слушаю…",
+    "transcribing": "Транскрибирую…"
+  },
+  "sa": {
+    "name": "संस्कृतम्",
+    "listening": "शृण्वन्…",
+    "transcribing": "लिखन्…"
+  },
+  "sd": {
+    "name": "سنڌي",
+    "listening": "ٻڌي رهيو آهيان…",
+    "transcribing": "لکجي رهيو آهي…"
+  },
+  "si": {
+    "name": "සිංහල",
+    "listening": "සවන් දෙමින්…",
+    "transcribing": "පිටපත් කරමින්…"
+  },
+  "sk": {
+    "name": "Slovenčina",
+    "listening": "Počúvam…",
+    "transcribing": "Prepisujem…"
+  },
+  "sl": {
+    "name": "Slovenščina",
+    "listening": "Poslušam…",
+    "transcribing": "Prepisujem…"
+  },
+  "sn": {
+    "name": "ChiShona",
+    "listening": "Kuteerera…",
+    "transcribing": "Kunyora…"
+  },
+  "so": {
+    "name": "Soomaali",
+    "listening": "Dhegeyste…",
+    "transcribing": "Qorista…"
+  },
+  "sq": {
+    "name": "Shqip",
+    "listening": "Po dëgjoj…",
+    "transcribing": "Po transkriptoj…"
+  },
+  "sr": {
+    "name": "Српски",
+    "listening": "Слушам…",
+    "transcribing": "Транскрибујем…"
+  },
+  "su": {
+    "name": "Basa Sunda",
+    "listening": "Ngadangukeun…",
+    "transcribing": "Transkripsi…"
+  },
+  "sv": {
+    "name": "Svenska",
+    "listening": "Lyssnar…",
+    "transcribing": "Transkriberar…"
+  },
+  "sw": {
+    "name": "Kiswahili",
+    "listening": "Sikiliza…",
+    "transcribing": "Kuandika…"
+  },
+  "ta": {
+    "name": "தமிழ்",
+    "listening": "கேட்கிறேன்…",
+    "transcribing": "எழுதுகிறேன்…"
+  },
+  "te": {
+    "name": "తెలుగు",
+    "listening": "వింటున్నాను…",
+    "transcribing": "లిప్యంతరీకరణ…"
+  },
+  "tg": {
+    "name": "Тоҷикӣ",
+    "listening": "Гӯш мекунам…",
+    "transcribing": "Транскрипция…"
+  },
+  "th": {
+    "name": "ภาษาไทย",
+    "listening": "กำลังฟัง…",
+    "transcribing": "กำลังถอดความ…"
+  },
+  "tk": {
+    "name": "Türkmençe",
+    "listening": "Diňleýärin…",
+    "transcribing": "Transkripsiýa…"
+  },
+  "tl": {
+    "name": "Filipino",
+    "listening": "Nakikinig…",
+    "transcribing": "Tinatranskribo…"
   },
   "tr": {
     "model": "drascom/whisper-large-v3-turbo-turkish-ct2",
     "name": "Türkçe",
     "listening": "Dinliyorum…",
-    "typing": "Yazıyor…"
+    "transcribing": "Yazıya dökülüyor…"
+  },
+  "tt": {
+    "name": "Татарча",
+    "listening": "Тыңлыйм…",
+    "transcribing": "Транскрипцияләү…"
+  },
+  "uk": {
+    "name": "Українська",
+    "listening": "Слухаю…",
+    "transcribing": "Транскрибую…"
+  },
+  "ur": {
+    "name": "اردو",
+    "listening": "سن رہا ہوں…",
+    "transcribing": "لکھا جا رہا ہے…"
+  },
+  "uz": {
+    "name": "O'zbekcha",
+    "listening": "Tinglamoqdaman…",
+    "transcribing": "Transkripsiya…"
+  },
+  "vi": {
+    "name": "Tiếng Việt",
+    "listening": "Đang nghe…",
+    "transcribing": "Đang phiên âm…"
+  },
+  "yi": {
+    "name": "ייִדיש",
+    "listening": "הער איך…",
+    "transcribing": "שרייב איך…"
+  },
+  "yo": {
+    "name": "Yorùbá",
+    "listening": "Ngbọ́…",
+    "transcribing": "Nkọ…"
+  },
+  "zh": {
+    "name": "中文",
+    "listening": "正在聆听…",
+    "transcribing": "正在转录…"
   }
 }

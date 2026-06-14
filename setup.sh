@@ -79,7 +79,7 @@ else
   curl -fsSL "$BASE/config/model_aliases.json" -o "$ALIASES_FILE"
 fi
 # Speaches needs a flat { "lang": "model-id" } map; transform from the rich format
-jq 'map_values(.model)' "$ALIASES_FILE" > "$SPEACHES_ALIASES_FILE"
+jq 'map_values(.model // empty) | with_entries(select(.value != ""))' "$ALIASES_FILE" > "$SPEACHES_ALIASES_FILE"
 echo "Aliases: $ALIASES_FILE"
 
 cfg() { jq -r "$1 // empty" "$CONFIG_FILE"; }
