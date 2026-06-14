@@ -109,10 +109,8 @@ if [ "${1:-}" = "--uninstall" ]; then
     echo "  removed config ($CONFIG_FILE)"
   fi
 
-  if [ -f "$HOME/.config/stt/aliases.json" ]; then
-    rm -f "$HOME/.config/stt/aliases.json"
-    echo "  removed aliases ($HOME/.config/stt/aliases.json)"
-  fi
+  rm -f "$HOME/.config/stt/aliases.json" "$HOME/.config/stt/speaches_aliases.json"
+  echo "  removed aliases"
   rmdir --ignore-fail-on-non-empty "$HOME/.config/stt" 2>/dev/null || true
 
   if [ -f "$HYPR_CONF" ] && grep -qF "$MARK_START" "$HYPR_CONF"; then
