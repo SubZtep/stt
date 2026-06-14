@@ -15,7 +15,7 @@ _ALIASES="$HOME/.config/stt/aliases.json"
 _cfg() { [ -f "$_CFG" ] && jq -r "$1 // empty" "$_CFG" 2>/dev/null || true; }
 _alias() { [ -f "$_ALIASES" ] && jq -r "$1 // empty" "$_ALIASES" 2>/dev/null || true; }
 
-# ---- single-instance: kill any previous stt and orphaned ffmpeg ----
+# MARK: ---- single-instance: kill any previous stt and orphaned ffmpeg ----
 _PID_FILE="/tmp/stt.pid"
 _FFMPEG_PID_FILE="/tmp/stt.ffmpeg.pid"
 if [ -f "$_PID_FILE" ]; then
@@ -37,7 +37,7 @@ echo "$$" > "$_PID_FILE"
 _RECORDING_FILE="/tmp/stt.recording"
 trap 'rm -f "$_PID_FILE" "$_RECORDING_FILE" "$_FFMPEG_PID_FILE" "$tmp" "$_rc_file"' EXIT
 
-# ---- config ----
+# MARK: ---- config ----
 _default_url="$(_cfg '.url')"; _default_url="${_default_url:-http://localhost:8000/v1}"
 _default_model="$(_cfg '.model')"; _default_model="${_default_model:-multi}"
 _default_device="$(_cfg '.device')"; _default_device="${_default_device:-default}"
@@ -46,12 +46,12 @@ STT_URL="${STT_URL:-$_default_url}"
 STT_MODEL="${STT_MODEL:-$_default_model}"
 [ -n "${STT_LANGUAGE:-}" ] && STT_MODEL="$STT_LANGUAGE"
 
-# ---- i18n strings from aliases ----
+# MARK: ---- i18n strings from aliases ----
 _lang_name="$(_alias ".\"$STT_MODEL\".name // \"$STT_MODEL\"")"
 _msg_listening="$(_alias ".\"$STT_MODEL\".listening // \"Listening…\"")"
 _msg_transcribing="$(_alias ".\"$STT_MODEL\".transcribing // \"Transcribing…\"")"
 
-# ---- notifications ----
+#  MARK: ---- notifications ----
 _notif_id_file="/tmp/stt.notif_id"
 _notif_id="$(cat "$_notif_id_file" 2>/dev/null || echo 0)"
 _notify() {
@@ -62,15 +62,15 @@ _die() { rm -f "$_RECORDING_FILE"; echo "$1" >&2; _notify "Error: $1"; exit 1; }
 
 _notify "$_msg_listening"
 
-# ---- wait for server to be ready (handles container startup delay) ----
+# MARK: ---- wait for server to be ready (handles container startup delay) ----
 _server_ready=0
-for _i in 1 2 3; do
+for _i in $(seq 1 30); do
   curl -sf "$STT_URL/models" >/dev/null 2>&1 && _server_ready=1 && break
   sleep 1
 done
 [ "$_server_ready" = "1" ] || _die "speaches not reachable at $STT_URL"
 
-# ---- recording setup ----
+# MARK: ---- recording setup ----
 in_args=(-f pulse -i "${STT_DEVICE:-$_default_device}")
 tmp="$(mktemp -t stt.XXXXXX.wav)"
 _rc_file="$(mktemp -t stt.rc.XXXXXX)"
@@ -80,7 +80,7 @@ touch "$_RECORDING_FILE"
 
 trap '' INT TERM
 
-# ---- response parser ----
+# MARK: ---- response parser ----
 # Sets globals: accumulated, _http_status, _content_type
 _parse_response() {
   local _in_headers=1
@@ -123,7 +123,7 @@ _parse_response() {
   fi
 }
 
-# ---- build VAD params from config if present ----
+# MARK: ---- build VAD params from config if present ----
 _vad_json="$(_cfg '.vad // empty')"
 _vad_args=()
 [ -n "$_vad_json" ] && _vad_args=(-F "vad_parameters=$_vad_json")
@@ -156,7 +156,7 @@ trap - INT TERM
 _curl_rc="$(cat "$_rc_file" 2>/dev/null || echo 1)"
 [ "$_curl_rc" -eq 0 ] || _die "could not reach $STT_URL (curl exit: $_curl_rc)"
 
-# ---- 404: model not downloaded yet — fallback to multi, download in background ----
+# MARK: ---- 404: model not downloaded yet — fallback to multi, download in background ----
 if [ "$_http_status" = "404" ] && [ "$STT_MODEL" != "multi" ]; then
   curl -s -X POST "$STT_URL/models/$STT_MODEL" &>/dev/null &
   _fallback_name="$(_alias '.multi.name // "Multilingual"')"
@@ -183,7 +183,7 @@ fi
 text="$(printf '%s' "$accumulated" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 [ -n "$text" ] || _die "empty transcript"
 
-# Recording done — clear the lockfile
+# MARK: Recording done — clear the lockfile
 rm -f "$_RECORDING_FILE"
 
 printf '\n'
