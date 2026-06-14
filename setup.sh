@@ -57,51 +57,27 @@ have jq || { echo "ERROR: jq is required." >&2; exit 1; }
 
 # ---------------------------------------------------------------- config
 
-xkb_to_lang() {
-  case "$1" in
-    gb|us|au|ca|nz) echo "en" ;;
-    cz) echo "cs" ;; dk) echo "da" ;; gr) echo "el" ;;
-    jp) echo "ja" ;; kr) echo "ko" ;; cn|tw) echo "zh" ;;
-    *) echo "$1" ;;
-  esac
-}
-
 if [ ! -f "$CONFIG_FILE" ]; then
   mkdir -p "$(dirname "$CONFIG_FILE")"
 
   local_default="$(dirname "$0")/config/default.json"
   if [ -f "$local_default" ]; then
-    default_json="$(cat "$local_default")"
+    cat "$local_default" > "$CONFIG_FILE"
   else
-    default_json="$(curl -fsSL "$BASE/config/default.json")"
-  fi
-
-  if have hyprctl; then
-    layout_str="$(hyprctl devices -j 2>/dev/null |
-      jq -r '[.keyboards[].layout] | first // empty' 2>/dev/null)"
-  fi
-
-  if [ -n "${layout_str:-}" ]; then
-    echo "Detected keyboard layouts: $layout_str"
-    models_json="{}"
-    IFS=',' read -ra xkb_codes <<< "$layout_str"
-    for xkb in "${xkb_codes[@]}"; do
-      lang="$(xkb_to_lang "$xkb")"
-      model_val="$(echo "$default_json" | jq -r --arg l "$lang" '.models[$l] // empty')"
-      if [ -n "$model_val" ]; then
-        models_json="$(echo "$models_json" | jq --arg l "$lang" --arg m "$model_val" '.[$l] = $m')"
-        echo "  $xkb -> $lang -> $model_val"
-      else
-        echo "  $xkb -> $lang (no specific model, will use default)"
-      fi
-    done
-    echo "$default_json" | jq --argjson m "$models_json" '.models = $m' > "$CONFIG_FILE"
-  else
-    echo "$default_json" > "$CONFIG_FILE"
+    curl -fsSL "$BASE/config/default.json" -o "$CONFIG_FILE"
   fi
 
   echo "Created config: $CONFIG_FILE"
 fi
+
+ALIASES_FILE="$HOME/.config/stt-aliases.json"
+local_aliases="$(dirname "$0")/config/model_aliases.json"
+if [ -f "$local_aliases" ]; then
+  cp "$local_aliases" "$ALIASES_FILE"
+else
+  curl -fsSL "$BASE/config/model_aliases.json" -o "$ALIASES_FILE"
+fi
+echo "Aliases: $ALIASES_FILE"
 
 cfg() { jq -r "$1 // empty" "$CONFIG_FILE"; }
 expand() { eval echo "$1"; } # expand $HOME etc. in config values
@@ -125,6 +101,11 @@ if [ "${1:-}" = "--uninstall" ]; then
   if [ -f "$CONFIG_FILE" ]; then
     rm -f "$CONFIG_FILE"
     echo "  removed config ($CONFIG_FILE)"
+  fi
+
+  if [ -f "$HOME/.config/stt-aliases.json" ]; then
+    rm -f "$HOME/.config/stt-aliases.json"
+    echo "  removed aliases ($HOME/.config/stt-aliases.json)"
   fi
 
   if [ -f "$HYPR_CONF" ] && grep -qF "$MARK_START" "$HYPR_CONF"; then
@@ -183,16 +164,12 @@ else
     --name "$CONTAINER" \
     -p 8000:8000 \
     -e ENABLE_UI=False \
+    -v ./config/model_aliases.json:/home/ubuntu/speaches/model_aliases.json \
     -v hf-hub-cache:/home/ubuntu/.cache/huggingface/hub \
     ghcr.io/speaches-ai/speaches:0.9.0-rc.3-cpu >/dev/null
 fi
 
-download_model "$MODEL"
-
-mapfile -t lang_models < <(jq -r '.models // {} | to_entries[] | .value' "$CONFIG_FILE" 2>/dev/null || true)
-for lm in "${lang_models[@]}"; do
-  [ "$lm" != "$MODEL" ] && download_model "$lm"
-done
+download_model "$(jq -r '.multi' "$ALIASES_FILE")"
 
 # ---------------------------------------------------------------- keybinding
 

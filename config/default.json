@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/SubZtep/stt/refs/tags/v0.2.0/config/schema.json",
   "url": "http://localhost:8000/v1",
-  "model": "Systran/faster-whisper-small",
+  "model": "multi",
   "device": "default",
   "bin": "$HOME/.local/bin",
   "container": "speaches",
@@ -9,15 +9,5 @@
     "config": "$HOME/.config/hypr/bindings.conf",
     "key": "SUPER, grave",
     "mark": ["# >>> stt >>>", "# <<< stt <<<"]
-  },
-  "models": {
-    "de": "bofenghuang/whisper-large-v2-cv11-german-ct2",
-    "en": "Systran/faster-whisper-medium.en",
-    "fr": "bofenghuang/whisper-large-v2-cv11-french-ct2",
-    "hu": "istupakov/parakeet-tdt-0.6b-v3-onnx",
-    "it": "LocalAI-io/whisper-base-it-ct2-int8",
-    "jp": "arc-r/faster-whisper-large-v2-mix-jp",
-    "pl": "mmalyska/distil-whisper-large-v3-pl-ct2",
-    "tr": "drascom/whisper-large-v3-turbo-turkish-ct2"
   }
 }

@@ -22,8 +22,8 @@
     },
     "model": {
       "type": "string",
-      "default": "Systran/faster-whisper-small",
-      "description": "Default (multi-language) model"
+      "default": "multi",
+      "description": "Default model alias (from model_aliases.json)"
     },
     "device": {
       "type": "string",
@@ -64,13 +64,6 @@
         }
       },
       "additionalProperties": false
-    },
-    "models": {
-      "type": "object",
-      "description": "Language-specific model overrides",
-      "additionalProperties": {
-        "type": "string"
-      }
     }
   },
   "additionalProperties": false,

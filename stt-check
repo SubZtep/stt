@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# stt-check — verify all configured models are available on the speaches server
+# stt-check — verify all alias models are available on the speaches server
 set -uo pipefail
 
 CONFIG_FILE="${STT_CONFIG:-$HOME/.config/stt.json}"
+ALIASES_FILE="${STT_ALIASES:-$HOME/.config/stt-aliases.json}"
 cfg() { [ -f "$CONFIG_FILE" ] && jq -r "$1 // empty" "$CONFIG_FILE" 2>/dev/null || true; }
 
 url="$(cfg '.url')"; url="${url:-http://localhost:8000/v1}"
-default_model="$(cfg '.model')"; default_model="${default_model:-Systran/faster-whisper-small}"
-mapfile -t lang_models < <(jq -r '.models // {} | to_entries[] | "\(.key)=\(.value)"' "$CONFIG_FILE" 2>/dev/null || true)
+mapfile -t alias_keys < <(jq -r 'keys[]' "$ALIASES_FILE" 2>/dev/null || true)
 
 pass=0; fail=0
 
@@ -27,11 +27,8 @@ check_model() {
 echo "Checking models against $url"
 echo
 
-check_model "default" "$default_model"
-
-for entry in "${lang_models[@]}"; do
-  lang="${entry%%=*}"; model="${entry#*=}"
-  [ "$model" != "$default_model" ] && check_model "$lang" "$model"
+for key in "${alias_keys[@]}"; do
+  check_model "$key" "$key"
 done
 
 echo

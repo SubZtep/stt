@@ -17,18 +17,15 @@ _cfg() {
 _default_url="$(_cfg '.url')"
 _default_url="${_default_url:-http://localhost:8000/v1}"
 _default_model="$(_cfg '.model')"
-_default_model="${_default_model:-Systran/faster-whisper-small}"
+_default_model="${_default_model:-multi}"
 _default_device="$(_cfg '.device')"
 _default_device="${_default_device:-default}"
 
 STT_URL="${STT_URL:-$_default_url}"
 STT_MODEL="${STT_MODEL:-$_default_model}"
 
-# If a language is set and the config has a language-specific model, use it
-if [ -n "${STT_LANGUAGE:-}" ]; then
-  _lang_model="$(_cfg ".models[\"$STT_LANGUAGE\"]")"
-  [ -n "$_lang_model" ] && STT_MODEL="$_lang_model"
-fi
+# If a language is set, use it directly as the alias key (resolved server-side)
+[ -n "${STT_LANGUAGE:-}" ] && STT_MODEL="$STT_LANGUAGE"
 
 # Linux only (PulseAudio/PipeWire). STT_DEVICE overrides the input source.
 in_args=(-f pulse -i "${STT_DEVICE:-$_default_device}")
