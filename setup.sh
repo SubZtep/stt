@@ -98,7 +98,7 @@ MARK_END="$(cfg '.hypr.mark[1]')"; MARK_END="${MARK_END:-# <<< stt <<<}"
 if [ "${1:-}" = "--uninstall" ]; then
   echo "Uninstalling stt…"
 
-  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang" "$BIN_DIR/stt-check" "$BIN_DIR/stt-download" "$BIN_DIR/stt-toggle"
+  rm -f "$BIN_DIR/stt" "$BIN_DIR/stt-layout-lang" "$BIN_DIR/stt-check" "$BIN_DIR/stt-download" "$BIN_DIR/stt-toggle" "$BIN_DIR/stt-status"
   echo "  removed scripts"
 
   rm -rf "$HOME/.local/share/stt"
@@ -137,7 +137,7 @@ fi
 
 echo "Downloading scripts -> $BIN_DIR"
 mkdir -p "$BIN_DIR"
-for f in stt stt-layout-lang stt-check stt-download stt-toggle; do
+for f in stt stt-layout-lang stt-check stt-download stt-toggle stt-status; do
   curl -fsSL "$BASE/$f" -o "$BIN_DIR/$f"
   chmod +x "$BIN_DIR/$f"
   echo "  $f"
