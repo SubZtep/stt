@@ -10,7 +10,7 @@
 set -euo pipefail
 
 REPO="${STTTC_REPO:-SubZtep/stttc}"
-REF="${STTTC_REF:-v0.13.1}"
+REF="${STTTC_REF:-v0.13.2}"
 BASE="https://raw.githubusercontent.com/$REPO/$REF"
 CONFIG_FILE="$HOME/.config/stttc/config.json"
 
@@ -197,7 +197,7 @@ if have hyprctl; then
       echo "bind  = $KEY, exec, STTTC_LANGUAGE=\$(stttc-layout-lang) stttc"
       # Remove lockfile (signals stttc to stop even during server readiness wait)
       # and kill the exact ffmpeg PID if recording is already in progress.
-      local _bindr_cmd="sh -c 'rm -f /tmp/stttc.recording; kill -INT \"\$(cat /tmp/stttc.ffmpeg.pid 2>/dev/null)\" 2>/dev/null; true'"
+      _bindr_cmd="sh -c 'rm -f /tmp/stttc.recording; kill -INT \"\$(cat /tmp/stttc.ffmpeg.pid 2>/dev/null)\" 2>/dev/null; true'"
       echo "bindr = $KEY, exec, $_bindr_cmd"
       # Fallback: if the modifier is released before the key.
       _key_only="${KEY##*, }"
