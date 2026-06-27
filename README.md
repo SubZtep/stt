@@ -1,4 +1,11 @@
-# Speech-To-Text
+> [!CAUTION]
+> **WIP** — Example`s reference test app.
+
+---
+---
+---
+
+# `stttc`
 
 Minimalist **push-to-talk** dictation for **Hyprland**: hold a hotkey to talk, release to drop the transcribed text into your clipboard.
 

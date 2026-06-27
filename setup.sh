@@ -10,7 +10,7 @@
 set -euo pipefail
 
 REPO="${STTTC_REPO:-SubZtep/stttc}"
-REF="${STTTC_REF:-v0.12.0}"
+REF="${STTTC_REF:-v0.13.1}"
 BASE="https://raw.githubusercontent.com/$REPO/$REF"
 CONFIG_FILE="$HOME/.config/stttc/config.json"
 
